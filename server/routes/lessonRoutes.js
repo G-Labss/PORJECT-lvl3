@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { validateLesson } = require('../middleware/validation');
 const {
   getAllLessons,
   getLessonById,
@@ -9,15 +8,14 @@ const {
   deleteLesson,
 } = require('../controllers/lessonController');
 
-// GET all lessons & POST new lesson
+// Remove validation for now - we'll add it back later if needed
 router.route('/')
   .get(getAllLessons)
-  .post(validateLesson, createLesson);
+  .post(createLesson);
 
-// GET, PUT, DELETE specific lesson
 router.route('/:id')
   .get(getLessonById)
-  .put(validateLesson, updateLesson)
+  .put(updateLesson)
   .delete(deleteLesson);
 
 module.exports = router;

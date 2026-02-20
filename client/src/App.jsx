@@ -1,3 +1,5 @@
+import AdminDashboard from './pages/AdminDashboard';
+import AboutPage from './pages/AboutPage';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
@@ -16,10 +18,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
+            <Route path="about" element={<AboutPage />} />
             <Route path="lessons" element={<LessonsPage />} />
             <Route path="rates" element={<RatesPage />} />
             <Route path="ranking" element={<RankingPage />} />
             <Route path="login" element={<LoginPage />} />
+            <Route path="admin" element={<AdminDashboard />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
