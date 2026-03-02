@@ -1,15 +1,18 @@
 import React from 'react';
 import { LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import useForm from '../hooks/useForm';
+import { useAppContext } from '../context/AppContext';
 
 const LoginPage = () => {
+  const { login } = useAppContext();
+  const navigate = useNavigate();
+
   const { values, errors, isSubmitting, handleChange, handleSubmit } = useForm(
     { email: '', password: '' },
     async (data) => {
-      // Simulate login - in real app this would call backend
-      console.log('Login attempt:', data);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('Login functionality coming soon!');
+      await login(data);
+      navigate('/admin');
     }
   );
 
@@ -124,26 +127,6 @@ const LoginPage = () => {
           </button>
         </form>
 
-        <div style={{ 
-          textAlign: 'center', 
-          marginTop: '1.5rem',
-          paddingTop: '1.5rem',
-          borderTop: '1px solid #e5e7eb'
-        }}>
-          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-            Don't have an account?{' '}
-            <a 
-              href="#" 
-              style={{ 
-                color: '#10b981', 
-                fontWeight: 600,
-                textDecoration: 'none'
-              }}
-            >
-              Register now
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );

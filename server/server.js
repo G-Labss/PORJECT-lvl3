@@ -5,6 +5,9 @@ const connectDB = require('./db/connection');
 const errorHandler = require('./middleware/errorHandler');
 const lessonRoutes = require('./routes/lessonRoutes');
 const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
+const contactRoutes = require('./routes/contactRoutes');
+const discountRoutes = require('./routes/discountRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,8 +20,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/discounts', discountRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

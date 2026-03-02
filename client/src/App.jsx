@@ -4,6 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import LessonsPage from './pages/LessonsPage';
 import RatesPage from './pages/RatesPage';
@@ -23,7 +24,11 @@ function App() {
             <Route path="rates" element={<RatesPage />} />
             <Route path="ranking" element={<RankingPage />} />
             <Route path="login" element={<LoginPage />} />
-            <Route path="admin" element={<AdminDashboard />} />
+            <Route path="admin" element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

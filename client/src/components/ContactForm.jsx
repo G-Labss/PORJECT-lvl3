@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useForm from '../hooks/useForm';
 import { Send, CheckCircle } from 'lucide-react';
+import { contactAPI } from '../services/api';
 
 const ContactForm = () => {
     const [submitted, setSubmitted] = useState(false);
@@ -13,14 +14,9 @@ const ContactForm = () => {
             message: '',
         },
         async (formData) => {
-            // Simulate sending form data
-            console.log('Form submitted:', formData);
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-
+            await contactAPI.submit(formData);
             setSubmitted(true);
             reset();
-
-            // Hide success message after 5 seconds
             setTimeout(() => setSubmitted(false), 5000);
         }
     );

@@ -25,10 +25,6 @@ exports.validateLesson = [
   body('maxStudents')
     .optional()
     .isInt({ min: 1 }).withMessage('Must allow at least 1 student'),
-  
-  body('coach')
-    .notEmpty().withMessage('Coach ID is required')
-    .isMongoId().withMessage('Invalid coach ID'),
 ];
 
 // Validation rules for creating a user

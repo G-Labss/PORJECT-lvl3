@@ -131,6 +131,10 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Media Gallery Section */}
+      <MediaGallery />
+      <VideoGallery />
+
       {/* Featured Lessons */}
       <section style={{ padding: '3rem 1rem', backgroundColor: '#f9fafb' }}>
         <div className="container">
@@ -406,6 +410,284 @@ const HomePage = () => {
         </div>
       </section>
     </div>
+  );
+};
+
+// Automatically picks up ALL images dropped into src/assets/media/
+// Supported formats: jpg, jpeg, png, webp, gif
+const imageModules = import.meta.glob('../assets/media/*.{jpg,jpeg,png,webp,gif}', { eager: true });
+
+const MEDIA_PHOTOS = Object.entries(imageModules).map(([path, mod]) => ({
+  src: mod.default,
+  // Caption is generated from the filename: "my_court_shot.jpg" → "My court shot"
+  caption: path
+    .split('/').pop()
+    .replace(/\.[^.]+$/, '')
+    .replace(/[-_]/g, ' ')
+    .replace(/^\w/, c => c.toUpperCase()),
+}));
+
+const MediaGallery = () => {
+  const [lightbox, setLightbox] = React.useState(null);
+
+  if (MEDIA_PHOTOS.length === 0) return null;
+
+  return (
+    <section style={{ padding: '3rem 1rem', backgroundColor: 'white' }}>
+      <div className="container">
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#111827' }}>
+            In Action
+          </h2>
+          <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
+            Moments from the court
+          </p>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1rem',
+        }}>
+          {MEDIA_PHOTOS.map((photo, i) => (
+            <div
+              key={i}
+              onClick={() => setLightbox(i)}
+              style={{
+                borderRadius: '0.75rem',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                position: 'relative',
+                aspectRatio: '4/3',
+                backgroundColor: '#f3f4f6',
+              }}
+            >
+              <img
+                src={photo.src}
+                alt={photo.caption}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                  transition: 'transform 0.3s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              />
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background: 'linear-gradient(transparent, rgba(0,0,0,0.55))',
+                padding: '1.5rem 1rem 0.75rem',
+                color: 'white',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+              }}>
+                {photo.caption}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightbox !== null && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.88)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '2rem',
+          }}
+        >
+          <img
+            src={MEDIA_PHOTOS[lightbox].src}
+            alt={MEDIA_PHOTOS[lightbox].caption}
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '85vh',
+              objectFit: 'contain',
+              borderRadius: '0.5rem',
+            }}
+            onClick={e => e.stopPropagation()}
+          />
+          <button
+            onClick={() => setLightbox(null)}
+            style={{
+              position: 'fixed',
+              top: '1.5rem',
+              right: '1.5rem',
+              background: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '2.5rem',
+              height: '2.5rem',
+              fontSize: '1.25rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+    </section>
+  );
+};
+
+// Automatically picks up ALL videos dropped into src/assets/media/videos/
+// Supported formats: mov, mp4, webm
+const videoModules = import.meta.glob('../assets/media/videos/*.{mov,MOV,mp4,MP4,webm,WEBM}', { eager: true });
+
+const MEDIA_VIDEOS = Object.entries(videoModules).map(([path, mod]) => ({
+  src: mod.default,
+  caption: path
+    .split('/').pop()
+    .replace(/\.[^.]+$/, '')
+    .replace(/[-_]/g, ' ')
+    .replace(/^\w/, c => c.toUpperCase()),
+}));
+
+const VideoGallery = () => {
+  const [active, setActive] = React.useState(null);
+
+  if (MEDIA_VIDEOS.length === 0) return null;
+
+  return (
+    <section style={{ padding: '0 1rem 3rem', backgroundColor: 'white' }}>
+      <div className="container">
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#111827' }}>
+            Video Highlights
+          </h2>
+          <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
+            Watch coaching sessions in action
+          </p>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1rem',
+        }}>
+          {MEDIA_VIDEOS.map((video, i) => (
+            <div
+              key={i}
+              onClick={() => setActive(i)}
+              style={{
+                borderRadius: '0.75rem',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                position: 'relative',
+                aspectRatio: '16/9',
+                backgroundColor: '#111827',
+              }}
+            >
+              <video
+                src={video.src}
+                muted
+                preload="metadata"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+              {/* Play button overlay */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(0,0,0,0.35)',
+                transition: 'background 0.2s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.5)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.35)'}
+              >
+                <div style={{
+                  width: '3.5rem',
+                  height: '3.5rem',
+                  borderRadius: '50%',
+                  backgroundColor: '#10b981',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '0.75rem',
+                }}>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="white">
+                    <polygon points="6,3 17,10 6,17" />
+                  </svg>
+                </div>
+                <span style={{ color: 'white', fontSize: '0.875rem', fontWeight: 500 }}>
+                  {video.caption}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Video lightbox */}
+      {active !== null && (
+        <div
+          onClick={() => setActive(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.92)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '2rem',
+          }}
+        >
+          <video
+            src={MEDIA_VIDEOS[active].src}
+            controls
+            autoPlay
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '85vh',
+              borderRadius: '0.5rem',
+              outline: 'none',
+            }}
+            onClick={e => e.stopPropagation()}
+          />
+          <button
+            onClick={() => setActive(null)}
+            style={{
+              position: 'fixed',
+              top: '1.5rem',
+              right: '1.5rem',
+              background: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '2.5rem',
+              height: '2.5rem',
+              fontSize: '1.25rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+    </section>
   );
 };
 

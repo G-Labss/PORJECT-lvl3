@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { validateLesson } = require('../middleware/validation');
+const { protect } = require('../middleware/authMiddleware');
 const {
   getAllLessons,
   getLessonById,
@@ -8,14 +10,13 @@ const {
   deleteLesson,
 } = require('../controllers/lessonController');
 
-// Remove validation for now - we'll add it back later if needed
 router.route('/')
   .get(getAllLessons)
-  .post(createLesson);
+  .post(protect, validateLesson, createLesson);
 
 router.route('/:id')
   .get(getLessonById)
-  .put(updateLesson)
-  .delete(deleteLesson);
+  .put(protect, validateLesson, updateLesson)
+  .delete(protect, deleteLesson);
 
 module.exports = router;
