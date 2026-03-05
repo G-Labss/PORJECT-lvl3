@@ -41,4 +41,16 @@ export const discountAPI = {
   validate: (code) => api.post('/discounts/validate', { code }).then(r => r.data),
 };
 
+export const paymentAPI = {
+  createStripeIntent: (data) => api.post('/payments/stripe/intent', data).then(r => r.data),
+  confirmStripePayment: (data) => api.post('/payments/stripe/confirm', data).then(r => r.data),
+  createCryptoBooking: (data) => api.post('/payments/crypto', data).then(r => r.data),
+  getCoachWallet: () => api.get('/payments/coach-wallet').then(r => r.data),
+};
+
+export const bookingAPI = {
+  getAll: () => api.get('/bookings').then(r => r.data),
+  getById: (id) => api.get(`/bookings/${id}`).then(r => r.data),
+};
+
 export default api;

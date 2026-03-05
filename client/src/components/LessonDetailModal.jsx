@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from './Modal';
+import BookingModal from './BookingModal';
 import { Clock, Users, DollarSign, Award, Calendar, Target } from 'lucide-react';
 
 const LessonDetailModal = ({ lesson, isOpen, onClose }) => {
+    const [bookingOpen, setBookingOpen] = useState(false);
+
     if (!lesson) return null;
 
     return (
+        <>
         <Modal isOpen={isOpen} onClose={onClose} title={lesson.title}>
             <div>
                 {/* Level Badge */}
@@ -217,12 +221,13 @@ const LessonDetailModal = ({ lesson, isOpen, onClose }) => {
                         type="button"
                         className="btn btn-primary"
                         style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-                        onClick={() => alert('Booking functionality coming soon!')}
+                        onClick={() => setBookingOpen(true)}
                     >
                         <Calendar size={20} />
                         Book This Lesson
                     </button>
                     <button
+                        type="button"
                         className="btn btn-secondary"
                         onClick={onClose}
                         style={{ flex: '0 0 auto' }}
@@ -232,6 +237,13 @@ const LessonDetailModal = ({ lesson, isOpen, onClose }) => {
                 </div>
             </div>
         </Modal>
+
+        <BookingModal
+            lesson={lesson}
+            isOpen={bookingOpen}
+            onClose={() => setBookingOpen(false)}
+        />
+        </>
     );
 };
 
