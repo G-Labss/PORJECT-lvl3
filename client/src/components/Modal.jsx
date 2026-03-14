@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 
+const GOLD = '#c9a84c';
+
 const Modal = ({ isOpen, onClose, title, children }) => {
-    // Close on ESC key
     useEffect(() => {
         const handleEscape = (e) => {
             if (e.key === 'Escape') onClose();
@@ -10,7 +11,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
         if (isOpen) {
             document.addEventListener('keydown', handleEscape);
-            document.body.style.overflow = 'hidden'; // Prevent background scroll
+            document.body.style.overflow = 'hidden';
         }
 
         return () => {
@@ -25,64 +26,64 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         <div
             style={{
                 position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                top: 0, left: 0, right: 0, bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.75)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 zIndex: 1000,
                 padding: '1rem',
+                backdropFilter: 'blur(4px)',
             }}
             onClick={onClose}
         >
             <div
                 style={{
-                    backgroundColor: 'white',
-                    borderRadius: '1rem',
+                    backgroundColor: '#111111',
+                    border: '1px solid #2a2a2a',
+                    borderRadius: '0.75rem',
                     maxWidth: '600px',
                     width: '100%',
                     maxHeight: '90vh',
                     overflow: 'auto',
                     position: 'relative',
                 }}
-                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
                 <div
                     style={{
                         padding: '1.5rem',
-                        borderBottom: '1px solid #e5e7eb',
+                        borderBottom: `1px solid #1e1e1e`,
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         position: 'sticky',
                         top: 0,
-                        backgroundColor: 'white',
-                        borderRadius: '1rem 1rem 0 0',
+                        backgroundColor: '#111111',
+                        borderRadius: '0.75rem 0.75rem 0 0',
                     }}
                 >
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', margin: 0 }}>
+                    <h2 style={{ fontSize: '1.375rem', fontWeight: 700, color: '#f0f0f0', margin: 0, fontFamily: "'Playfair Display', serif" }}>
                         {title}
                     </h2>
                     <button
                         onClick={onClose}
                         style={{
                             background: 'none',
-                            border: 'none',
+                            border: '1px solid #2a2a2a',
                             cursor: 'pointer',
-                            padding: '0.5rem',
-                            borderRadius: '0.5rem',
+                            padding: '0.4rem',
+                            borderRadius: '0.375rem',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            transition: 'border-color 0.2s',
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
-                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = GOLD; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#2a2a2a'; }}
                     >
-                        <X size={24} color="#6b7280" />
+                        <X size={18} color="#777" />
                     </button>
                 </div>
 

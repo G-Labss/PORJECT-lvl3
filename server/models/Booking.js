@@ -19,7 +19,7 @@ const bookingSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['stripe', 'crypto'],
+    enum: ['stripe', 'crypto', 'zelle'],
     required: true,
   },
   paymentStatus: {
@@ -35,6 +35,9 @@ const bookingSchema = new mongoose.Schema({
   cryptoTxHash: String,
   cryptoWalletAddress: String,
   notes: String,
+  scheduledDate: Date,
+  scheduledTime: String,
+  availabilitySlotId: mongoose.Schema.Types.ObjectId,
 }, { timestamps: true });
 
 module.exports = mongoose.model('Booking', bookingSchema);

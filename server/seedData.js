@@ -13,8 +13,8 @@ const seedData = async () => {
         console.log('🗑️  Cleared existing data');
 
         const coach = await User.create({
-            name: 'Daniil Medvedev',
-            email: 'daniil@tenniscoach.com',
+            name: 'Daniil Khitrou',
+            email: 'khitroudaniil@gmail.com',
             bio: 'Professional tennis coach with 10 years of experience. Specializing in advanced techniques and match strategy.',
             ntrpRating: 5.5,
             yearsExperience: 10,

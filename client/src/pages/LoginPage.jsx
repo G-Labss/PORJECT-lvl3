@@ -1,17 +1,22 @@
 import React from 'react';
-import { LogIn } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useForm from '../hooks/useForm';
 import { useAppContext } from '../context/AppContext';
+import { useToast } from '../context/ToastContext';
+
+const GOLD = '#c9a84c';
 
 const LoginPage = () => {
   const { login } = useAppContext();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const { values, errors, isSubmitting, handleChange, handleSubmit } = useForm(
     { email: '', password: '' },
     async (data) => {
       await login(data);
+      toast('Welcome back! Logged in successfully.', 'success');
       navigate('/admin');
     }
   );
@@ -23,24 +28,28 @@ const LoginPage = () => {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem 1rem',
-      backgroundColor: '#f9fafb'
+      backgroundColor: '#0a0a0a',
     }}>
-      <div className="card" style={{ maxWidth: '28rem', width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <LogIn 
-            size={48} 
-            color="#10b981" 
-            style={{ display: 'block', margin: '0 auto 1rem' }} 
-          />
-          <h1 style={{ 
-            fontSize: '2rem', 
-            fontWeight: 'bold', 
+      <div style={{
+        maxWidth: '26rem',
+        width: '100%',
+        backgroundColor: '#111111',
+        border: '1px solid #1e1e1e',
+        borderRadius: '0.75rem',
+        padding: '2.5rem',
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <Trophy size={40} color={GOLD} style={{ display: 'block', margin: '0 auto 1.25rem' }} />
+          <h1 style={{
+            fontSize: '1.875rem',
+            fontWeight: 700,
             marginBottom: '0.5rem',
-            color: '#111827'
+            color: '#f0f0f0',
+            fontFamily: "'Playfair Display', serif",
           }}>
             Welcome Back
           </h1>
-          <p style={{ color: '#6b7280' }}>Sign in to manage your lessons</p>
+          <p style={{ color: '#666', fontSize: '0.9rem' }}>Sign in to manage your coaching portal</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -74,32 +83,12 @@ const LoginPage = () => {
             {errors.password && <p className="form-error">{errors.password}</p>}
           </div>
 
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            marginBottom: '1.5rem'
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '1.5rem',
           }}>
-            <label style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '0.5rem',
-              fontSize: '0.875rem',
-              color: '#6b7280',
-              cursor: 'pointer'
-            }}>
-              <input type="checkbox" />
-              Remember me
-            </label>
-            <a 
-              href="#" 
-              style={{ 
-                color: '#10b981', 
-                fontSize: '0.875rem',
-                textDecoration: 'none',
-                fontWeight: 500
-              }}
-            >
+            <a href="#" style={{ color: GOLD, fontSize: '0.8125rem', textDecoration: 'none' }}>
               Forgot password?
             </a>
           </div>
@@ -107,11 +96,12 @@ const LoginPage = () => {
           {errors.general && (
             <div style={{
               padding: '0.75rem',
-              backgroundColor: '#fef2f2',
-              color: '#dc2626',
-              borderRadius: '0.5rem',
+              backgroundColor: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.2)',
+              color: '#f87171',
+              borderRadius: '0.375rem',
               marginBottom: '1rem',
-              fontSize: '0.875rem'
+              fontSize: '0.875rem',
             }}>
               {errors.general}
             </div>
@@ -120,13 +110,12 @@ const LoginPage = () => {
           <button
             type="submit"
             className="btn btn-primary"
-            style={{ width: '100%' }}
+            style={{ width: '100%', padding: '0.875rem', fontSize: '0.9375rem' }}
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
-
       </div>
     </div>
   );

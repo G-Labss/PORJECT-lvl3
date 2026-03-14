@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { Trophy, TrendingUp, Award, Medal, Search } from 'lucide-react';
 
+const GOLD = '#c9a84c';
+
 const RankingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('rating'); // rating, improvement, lessons
+  const [sortBy, setSortBy] = useState('rating');
 
-  // Sample student data
   const students = [
     { id: 1, name: 'Alex Dill', ntrp: 3.0, improvement: '+0.5', lessons: 12 },
     { id: 2, name: 'Gemma Sun', ntrp: 2.5, improvement: '+0.3', lessons: 8 },
@@ -16,99 +17,45 @@ const RankingPage = () => {
     { id: 7, name: 'Riley Davis', ntrp: 3.0, improvement: '+0.7', lessons: 14 },
   ];
 
-  // Filter and sort students
   const filteredAndSortedStudents = useMemo(() => {
-    // First filter by search term
-    let filtered = students.filter(student =>
-      student.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    // Then sort
+    let filtered = students.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()));
     let sorted = [...filtered];
-    if (sortBy === 'rating') {
-      sorted.sort((a, b) => b.ntrp - a.ntrp);
-    } else if (sortBy === 'improvement') {
-      sorted.sort((a, b) => parseFloat(b.improvement) - parseFloat(a.improvement));
-    } else if (sortBy === 'lessons') {
-      sorted.sort((a, b) => b.lessons - a.lessons);
-    }
-
+    if (sortBy === 'rating') sorted.sort((a, b) => b.ntrp - a.ntrp);
+    else if (sortBy === 'improvement') sorted.sort((a, b) => parseFloat(b.improvement) - parseFloat(a.improvement));
+    else if (sortBy === 'lessons') sorted.sort((a, b) => b.lessons - a.lessons);
     return sorted;
   }, [searchTerm, sortBy]);
 
-  const getMedalColor = (index) => {
-    if (index === 0) return '#f59e0b';
-    if (index === 1) return '#9ca3af';
-    if (index === 2) return '#cd7f32';
-    return '#6b7280';
-  };
+  const getMedalColor = (i) => ['#c9a84c', '#9ca3af', '#cd7f32'][i] ?? '#444';
 
   return (
     <div className="container" style={{ padding: '2rem 1rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <Trophy
-          size={64}
-          color="#10b981"
-          style={{ display: 'block', margin: '0 auto 1rem' }}
-        />
-        <h1 style={{
-          fontSize: '2.5rem',
-          fontWeight: 'bold',
-          marginBottom: '0.5rem',
-          color: '#111827'
-        }}>
+        <Trophy size={56} color={GOLD} style={{ display: 'block', margin: '0 auto 1rem' }} />
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#f0f0f0' }}>
           Student Rankings
         </h1>
-        <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
+        <p style={{ color: '#666', fontSize: '1.0625rem' }}>
           Celebrating our students' progress and achievements
         </p>
       </div>
 
-      {/* Search and Sort Controls */}
-      <div style={{
-        marginBottom: '2rem',
-        display: 'flex',
-        gap: '1rem',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}>
-        {/* Search Bar */}
+      {/* Controls */}
+      <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ position: 'relative', flex: '1', minWidth: '250px', maxWidth: '400px' }}>
-          <Search
-            size={20}
-            color="#6b7280"
-            style={{
-              position: 'absolute',
-              left: '1rem',
-              top: '50%',
-              transform: 'translateY(-50%)'
-            }}
-          />
+          <Search size={16} color="#555" style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
-            placeholder="Search students by name..."
+            placeholder="Search students..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="form-input"
-            style={{
-              paddingLeft: '3rem',
-              width: '100%'
-            }}
+            style={{ paddingLeft: '2.5rem', width: '100%' }}
           />
         </div>
-
-        {/* Sort Dropdown */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <label style={{ fontWeight: 500, color: '#374151', whiteSpace: 'nowrap' }}>
-            Sort by:
-          </label>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="form-select"
-            style={{ minWidth: '150px' }}
-          >
+          <label style={{ fontWeight: 500, color: '#888', fontSize: '0.875rem', whiteSpace: 'nowrap' }}>Sort by:</label>
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="form-select" style={{ minWidth: '150px' }}>
             <option value="rating">NTRP Rating</option>
             <option value="improvement">Improvement</option>
             <option value="lessons">Lessons Taken</option>
@@ -116,69 +63,26 @@ const RankingPage = () => {
         </div>
       </div>
 
-      {/* Results Count */}
-      <div style={{ marginBottom: '1rem', color: '#6b7280' }}>
+      <div style={{ marginBottom: '1rem', color: '#555', fontSize: '0.875rem' }}>
         Showing {filteredAndSortedStudents.length} of {students.length} students
       </div>
 
-      {/* Rankings Table */}
-      <div className="card" style={{ overflowX: 'auto' }}>
-        <table style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          minWidth: '600px'
-        }}>
+      {/* Table */}
+      <div className="card" style={{ overflowX: 'auto', padding: 0 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
           <thead>
-            <tr style={{
-              borderBottom: '2px solid #e5e7eb',
-              backgroundColor: '#f9fafb'
-            }}>
-              <th style={{
-                padding: '1rem',
-                textAlign: 'left',
-                fontWeight: 600,
-                color: '#374151'
-              }}>
-                Rank
-              </th>
-              <th style={{
-                padding: '1rem',
-                textAlign: 'left',
-                fontWeight: 600,
-                color: '#374151'
-              }}>
-                Student
-              </th>
-              <th style={{
-                padding: '1rem',
-                textAlign: 'center',
-                fontWeight: 600,
-                color: '#374151'
-              }}>
-                NTRP Rating
-              </th>
-              <th style={{
-                padding: '1rem',
-                textAlign: 'center',
-                fontWeight: 600,
-                color: '#374151'
-              }}>
-                Improvement
-              </th>
-              <th style={{
-                padding: '1rem',
-                textAlign: 'center',
-                fontWeight: 600,
-                color: '#374151'
-              }}>
-                Total Lessons
-              </th>
+            <tr style={{ borderBottom: '1px solid #1e1e1e', backgroundColor: '#0d0d0d' }}>
+              {['Rank', 'Student', 'NTRP Rating', 'Improvement', 'Total Lessons'].map((h, i) => (
+                <th key={h} style={{ padding: '1rem 1.25rem', textAlign: i === 0 || i === 1 ? 'left' : 'center', fontWeight: 600, color: '#666', fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {filteredAndSortedStudents.length === 0 ? (
               <tr>
-                <td colSpan="5" style={{ padding: '3rem', textAlign: 'center', color: '#6b7280' }}>
+                <td colSpan="5" style={{ padding: '3rem', textAlign: 'center', color: '#555' }}>
                   No students found matching "{searchTerm}"
                 </td>
               </tr>
@@ -186,73 +90,30 @@ const RankingPage = () => {
               filteredAndSortedStudents.map((student, index) => (
                 <tr
                   key={student.id}
-                  style={{
-                    borderBottom: '1px solid #e5e7eb',
-                    transition: 'background-color 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f9fafb';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
+                  style={{ borderBottom: '1px solid #1a1a1a', transition: 'background-color 0.15s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#161616'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                 >
-                  <td style={{ padding: '1rem' }}>
+                  <td style={{ padding: '1rem 1.25rem' }}>
                     {index < 3 ? (
-                      <Medal
-                        size={28}
-                        color={getMedalColor(index)}
-                        fill={getMedalColor(index)}
-                      />
+                      <Medal size={24} color={getMedalColor(index)} fill={getMedalColor(index)} />
                     ) : (
-                      <span style={{
-                        fontSize: '1.25rem',
-                        fontWeight: 'bold',
-                        color: '#6b7280'
-                      }}>
-                        #{index + 1}
-                      </span>
+                      <span style={{ fontSize: '1rem', fontWeight: 600, color: '#555' }}>#{index + 1}</span>
                     )}
                   </td>
-                  <td style={{
-                    padding: '1rem',
-                    fontWeight: 500,
-                    color: '#111827'
-                  }}>
-                    {student.name}
-                  </td>
-                  <td style={{ padding: '1rem', textAlign: 'center' }}>
-                    <span style={{
-                      backgroundColor: '#f0fdf4',
-                      color: '#166534',
-                      padding: '0.375rem 0.875rem',
-                      borderRadius: '9999px',
-                      fontWeight: 600,
-                      fontSize: '0.875rem'
-                    }}>
+                  <td style={{ padding: '1rem 1.25rem', fontWeight: 500, color: '#e0e0e0' }}>{student.name}</td>
+                  <td style={{ padding: '1rem 1.25rem', textAlign: 'center' }}>
+                    <span style={{ backgroundColor: 'rgba(201,168,76,0.1)', color: GOLD, padding: '0.3rem 0.75rem', borderRadius: '9999px', fontWeight: 600, fontSize: '0.8125rem', border: '1px solid rgba(201,168,76,0.2)' }}>
                       {student.ntrp} NTRP
                     </span>
                   </td>
-                  <td style={{ padding: '1rem', textAlign: 'center' }}>
-                    <span style={{
-                      color: '#10b981',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.25rem',
-                      fontWeight: 600
-                    }}>
-                      <TrendingUp size={16} />
+                  <td style={{ padding: '1rem 1.25rem', textAlign: 'center' }}>
+                    <span style={{ color: '#4ade80', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}>
+                      <TrendingUp size={14} />
                       {student.improvement}
                     </span>
                   </td>
-                  <td style={{
-                    padding: '1rem',
-                    textAlign: 'center',
-                    color: '#6b7280',
-                    fontWeight: 500
-                  }}>
-                    {student.lessons}
-                  </td>
+                  <td style={{ padding: '1rem 1.25rem', textAlign: 'center', color: '#777', fontWeight: 500 }}>{student.lessons}</td>
                 </tr>
               ))
             )}
@@ -262,143 +123,40 @@ const RankingPage = () => {
 
       {/* Achievement Cards */}
       <div className="grid grid-3" style={{ marginTop: '3rem' }}>
-        <div className="card" style={{ textAlign: 'center', backgroundColor: '#fef3c7' }}>
-          <Trophy
-            size={48}
-            color="#f59e0b"
-            style={{ display: 'block', margin: '0 auto 1rem' }}
-          />
-          <h3 style={{
-            fontSize: '1.25rem',
-            fontWeight: 'bold',
-            marginBottom: '0.5rem',
-            color: '#92400e'
-          }}>
-            Top Performer
-          </h3>
-          <p style={{
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            color: '#10b981',
-            marginBottom: '0.25rem'
-          }}>
-            {filteredAndSortedStudents[0]?.name || 'N/A'}
-          </p>
-          <p style={{ color: '#78716c' }}>
-            NTRP {filteredAndSortedStudents[0]?.ntrp || 'N/A'}
-          </p>
-        </div>
-
-        <div className="card" style={{ textAlign: 'center', backgroundColor: '#d1fae5' }}>
-          <TrendingUp
-            size={48}
-            color="#10b981"
-            style={{ display: 'block', margin: '0 auto 1rem' }}
-          />
-          <h3 style={{
-            fontSize: '1.25rem',
-            fontWeight: 'bold',
-            marginBottom: '0.5rem',
-            color: '#065f46'
-          }}>
-            Most Improved
-          </h3>
-          <p style={{
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            color: '#10b981',
-            marginBottom: '0.25rem'
-          }}>
-            {[...students].sort((a, b) =>
-              parseFloat(b.improvement) - parseFloat(a.improvement)
-            )[0].name}
-          </p>
-          <p style={{ color: '#78716c' }}>
-            {[...students].sort((a, b) =>
-              parseFloat(b.improvement) - parseFloat(a.improvement)
-            )[0].improvement} improvement
-          </p>
-        </div>
-
-        <div className="card" style={{ textAlign: 'center', backgroundColor: '#dbeafe' }}>
-          <Award
-            size={48}
-            color="#3b82f6"
-            style={{ display: 'block', margin: '0 auto 1rem' }}
-          />
-          <h3 style={{
-            fontSize: '1.25rem',
-            fontWeight: 'bold',
-            marginBottom: '0.5rem',
-            color: '#1e40af'
-          }}>
-            Most Dedicated
-          </h3>
-          <p style={{
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            color: '#10b981',
-            marginBottom: '0.25rem'
-          }}>
-            {[...students].sort((a, b) => b.lessons - a.lessons)[0].name}
-          </p>
-          <p style={{ color: '#78716c' }}>
-            {[...students].sort((a, b) => b.lessons - a.lessons)[0].lessons} lessons completed
-          </p>
-        </div>
+        {[
+          { icon: Trophy, label: 'Top Performer', color: GOLD, student: filteredAndSortedStudents[0], stat: `NTRP ${filteredAndSortedStudents[0]?.ntrp || 'N/A'}` },
+          { icon: TrendingUp, label: 'Most Improved', color: '#4ade80', student: [...students].sort((a, b) => parseFloat(b.improvement) - parseFloat(a.improvement))[0], stat: `${[...students].sort((a, b) => parseFloat(b.improvement) - parseFloat(a.improvement))[0].improvement} improvement` },
+          { icon: Award, label: 'Most Dedicated', color: '#818cf8', student: [...students].sort((a, b) => b.lessons - a.lessons)[0], stat: `${[...students].sort((a, b) => b.lessons - a.lessons)[0].lessons} lessons` },
+        ].map(({ icon: Icon, label, color, student, stat }) => (
+          <div key={label} className="card" style={{ textAlign: 'center', padding: '2rem' }}>
+            <Icon size={40} color={color} style={{ display: 'block', margin: '0 auto 1rem' }} />
+            <h3 style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.75rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</h3>
+            <p style={{ fontSize: '1.375rem', fontWeight: 700, color: '#f0f0f0', marginBottom: '0.25rem' }}>{student?.name || 'N/A'}</p>
+            <p style={{ color: '#555', fontSize: '0.875rem' }}>{stat}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Info Section */}
-      <div className="card" style={{
-        marginTop: '3rem',
-        backgroundColor: '#f0fdf4',
-        border: '2px solid #10b981'
-      }}>
-        <h3 style={{
-          fontSize: '1.25rem',
-          fontWeight: 'bold',
-          marginBottom: '1rem',
-          color: '#166534'
-        }}>
-          About NTRP Ratings
-        </h3>
-        <p style={{ color: '#6b7280', lineHeight: 1.6, marginBottom: '1rem' }}>
-          The National Tennis Rating Program (NTRP) is a rating system used to objectively
-          measure a tennis player's playing ability. Ratings range from 1.0 (beginner) to 7.0 (world class).
+      {/* NTRP Info */}
+      <div className="card" style={{ marginTop: '3rem', borderColor: 'rgba(201,168,76,0.2)' }}>
+        <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem', color: GOLD }}>About NTRP Ratings</h3>
+        <p style={{ color: '#666', lineHeight: 1.7, marginBottom: '1.25rem', fontSize: '0.9rem' }}>
+          The National Tennis Rating Program (NTRP) objectively measures playing ability from 1.0 (beginner) to 7.0 (world class).
         </p>
         <div className="grid grid-2" style={{ gap: '1rem' }}>
-          <div>
-            <strong style={{ color: '#166534', display: 'block', marginBottom: '0.25rem' }}>
-              1.0 - 2.5: Beginner
-            </strong>
-            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-              Learning basic strokes and court positioning
-            </p>
-          </div>
-          <div>
-            <strong style={{ color: '#166534', display: 'block', marginBottom: '0.25rem' }}>
-              3.0 - 4.0: Intermediate
-            </strong>
-            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-              Consistent strokes and tactical awareness
-            </p>
-          </div>
-          <div>
-            <strong style={{ color: '#166534', display: 'block', marginBottom: '0.25rem' }}>
-              4.5 - 5.5: Advanced
-            </strong>
-            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-              Strong competitive play with refined technique
-            </p>
-          </div>
-          <div>
-            <strong style={{ color: '#166534', display: 'block', marginBottom: '0.25rem' }}>
-              6.0 - 7.0: Professional
-            </strong>
-            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-              National and international tournament level
-            </p>
-          </div>
+          {[
+            { range: '1.0 – 2.5', label: 'Beginner', desc: 'Learning basic strokes and court positioning' },
+            { range: '3.0 – 4.0', label: 'Intermediate', desc: 'Consistent strokes and tactical awareness' },
+            { range: '4.5 – 5.5', label: 'Advanced', desc: 'Strong competitive play with refined technique' },
+            { range: '6.0 – 7.0', label: 'Professional', desc: 'National and international tournament level' },
+          ].map(({ range, label, desc }) => (
+            <div key={range}>
+              <strong style={{ color: '#c0c0c0', display: 'block', marginBottom: '0.25rem', fontSize: '0.9rem' }}>
+                {range}: {label}
+              </strong>
+              <p style={{ fontSize: '0.8125rem', color: '#555' }}>{desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

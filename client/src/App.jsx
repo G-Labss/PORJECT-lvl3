@@ -3,8 +3,10 @@ import AboutPage from './pages/AboutPage';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
+import { ToastProvider } from './context/ToastContext';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
+import ScrollToTop from './components/ScrollToTop';
 import HomePage from './pages/HomePage';
 import LessonsPage from './pages/LessonsPage';
 import RatesPage from './pages/RatesPage';
@@ -15,7 +17,9 @@ import NotFoundPage from './pages/NotFoundPage';
 function App() {
   return (
     <AppProvider>
+      <ToastProvider>
       <Router>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
@@ -33,6 +37,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      </ToastProvider>
     </AppProvider>
   );
 }

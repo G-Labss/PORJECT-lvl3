@@ -13,6 +13,25 @@ exports.getAllBookings = async (req, res, next) => {
   }
 };
 
+// PATCH /api/bookings/:id/pay (admin only)
+exports.markAsPaid = async (req, res, next) => {
+  try {
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { paymentStatus: 'paid' },
+      { new: true }
+    ).populate('lesson', 'title price level duration');
+
+    if (!booking) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+
+    res.status(200).json({ success: true, data: booking });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // GET /api/bookings/:id
 exports.getBookingById = async (req, res, next) => {
   try {

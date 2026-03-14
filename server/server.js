@@ -10,6 +10,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const discountRoutes = require('./routes/discountRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const availabilityRoutes = require('./routes/availabilityRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +30,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/discounts', discountRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/availability', availabilityRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

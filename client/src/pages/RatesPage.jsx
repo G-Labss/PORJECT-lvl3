@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useAppContext } from '../context/AppContext';
 import LoadingSpinner from '../components/LoadingSpinner';
-import ErrorMessage from '../components/ErrorMessage';
 import { Check, Star, Calculator, Tag } from 'lucide-react';
 import { discountAPI } from '../services/api';
 
+const GOLD = '#c9a84c';
+
 const RatesPage = () => {
-  const { state, fetchLessons } = useAppContext();
+  const { state } = useAppContext();
   const { lessons, loading, error } = state;
   const [calculatorQuantity, setCalculatorQuantity] = useState(1);
   const [selectedLessonForCalc, setSelectedLessonForCalc] = useState(null);
@@ -53,41 +54,34 @@ const RatesPage = () => {
     'Advanced': displayLessons.filter(l => l.level === 'Advanced'),
   };
 
-  const levelColors = {
-    'Beginner': { bg: '#dbeafe', text: '#1e40af', border: '#3b82f6' },
-    'Intermediate': { bg: '#fed7aa', text: '#c2410c', border: '#f59e0b' },
-    'Advanced': { bg: '#fecaca', text: '#991b1b', border: '#ef4444' },
-  };
-
   return (
     <div className="container" style={{ padding: '2rem 1rem' }}>
+      {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#111827' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#f0f0f0', fontFamily: "'Playfair Display', serif" }}>
           Rates & Packages
         </h1>
-        <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
+        <p style={{ color: '#666', fontSize: '1.0625rem' }}>
           Competitive pricing for quality tennis instruction
         </p>
       </div>
 
+      {/* Price Calculator */}
       <div className="card" style={{
         marginBottom: '3rem',
-        background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
-        border: '2px solid #10b981',
-        padding: '2rem'
+        boxShadow: '0 0 0 1px rgba(201,168,76,0.2), 0 4px 24px rgba(0,0,0,0.4)',
+        padding: '2rem',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          <Calculator size={32} color="#10b981" />
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#166534', margin: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.75rem' }}>
+          <Calculator size={28} color={GOLD} />
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f0f0f0', margin: 0, fontFamily: "'Playfair Display', serif" }}>
             Price Calculator
           </h2>
         </div>
 
         <div className="grid grid-2" style={{ gap: '1.5rem', marginBottom: '1.5rem' }}>
           <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label" style={{ color: '#166534' }}>
-              Select Lesson Type
-            </label>
+            <label className="form-label">Select Lesson Type</label>
             <select
               className="form-select"
               value={selectedLessonForCalc?._id || ''}
@@ -95,28 +89,18 @@ const RatesPage = () => {
                 const lesson = displayLessons.find(l => l._id === e.target.value);
                 setSelectedLessonForCalc(lesson || null);
               }}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.5rem',
-                fontSize: '1rem',
-                backgroundColor: 'white'
-              }}
             >
               <option value="">Choose a lesson...</option>
               {displayLessons.map((lesson) => (
                 <option key={lesson._id} value={lesson._id}>
-                  {lesson.title} - ${lesson.price} ({lesson.level})
+                  {lesson.title} — ${lesson.price} ({lesson.level})
                 </option>
               ))}
             </select>
           </div>
 
           <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label" style={{ color: '#166534' }}>
-              Number of Lessons
-            </label>
+            <label className="form-label">Number of Lessons</label>
             <input
               type="number"
               className="form-input"
@@ -124,21 +108,12 @@ const RatesPage = () => {
               max="50"
               value={calculatorQuantity}
               onChange={(e) => setCalculatorQuantity(parseInt(e.target.value) || 1)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.5rem',
-                fontSize: '1rem'
-              }}
             />
           </div>
         </div>
 
         <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-          <label className="form-label" style={{ color: '#166534' }}>
-            Discount Code (Optional)
-          </label>
+          <label className="form-label">Discount Code <span style={{ color: '#555', fontWeight: 400 }}>(Optional)</span></label>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <input
               type="text"
@@ -149,55 +124,48 @@ const RatesPage = () => {
               onKeyDown={(e) => e.key === 'Enter' && applyDiscount()}
               style={{ flex: 1 }}
             />
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={applyDiscount}
-              style={{ whiteSpace: 'nowrap' }}
-            >
+            <button type="button" className="btn btn-secondary" onClick={applyDiscount} style={{ whiteSpace: 'nowrap' }}>
               Apply
             </button>
             {appliedDiscount > 0 && (
               <div style={{
-                backgroundColor: '#10b981',
-                color: 'white',
+                backgroundColor: 'rgba(201,168,76,0.15)',
+                color: GOLD,
+                border: `1px solid rgba(201,168,76,0.3)`,
                 padding: '0.75rem 1rem',
                 borderRadius: '0.5rem',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                whiteSpace: 'nowrap',
               }}>
-                <Tag size={18} />
+                <Tag size={16} />
                 {appliedDiscount}% OFF
               </div>
             )}
           </div>
           {discountError && (
-            <p style={{ fontSize: '0.875rem', color: '#dc2626', marginTop: '0.5rem', marginBottom: 0 }}>
+            <p style={{ fontSize: '0.875rem', color: '#f87171', marginTop: '0.5rem', marginBottom: 0 }}>
               {discountError}
             </p>
           )}
         </div>
 
-        {selectedLessonForCalc && (
+        {selectedLessonForCalc ? (
           <div style={{
-            backgroundColor: 'white',
+            backgroundColor: '#0d0d0d',
             padding: '1.5rem',
-            borderRadius: '0.75rem',
-            border: '2px solid #10b981'
+            borderRadius: '0.875rem',
+            boxShadow: '0 0 0 1px rgba(201,168,76,0.15)',
           }}>
             <div style={{ marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#6b7280' }}>
-                  {selectedLessonForCalc.title} × {calculatorQuantity}
-                </span>
-                <span style={{ fontWeight: 600 }}>
-                  ${(selectedLessonForCalc.price * calculatorQuantity).toFixed(2)}
-                </span>
+                <span style={{ color: '#888' }}>{selectedLessonForCalc.title} × {calculatorQuantity}</span>
+                <span style={{ fontWeight: 600, color: '#e0e0e0' }}>${(selectedLessonForCalc.price * calculatorQuantity).toFixed(2)}</span>
               </div>
               {appliedDiscount > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#10b981' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: GOLD }}>
                   <span>Discount ({appliedDiscount}%)</span>
                   <span>-${((selectedLessonForCalc.price * calculatorQuantity * appliedDiscount) / 100).toFixed(2)}</span>
                 </div>
@@ -205,62 +173,60 @@ const RatesPage = () => {
             </div>
             <div style={{
               paddingTop: '1rem',
-              borderTop: '2px solid #e5e7eb',
+              borderTop: '1px solid rgba(255,255,255,0.07)',
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
             }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#111827' }}>
-                Total:
-              </span>
-              <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>
+              <span style={{ fontSize: '1rem', fontWeight: 600, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Total</span>
+              <span style={{ fontSize: '2rem', fontWeight: 700, color: GOLD, fontFamily: "'Playfair Display', serif" }}>
                 ${calculatedTotal.toFixed(2)}
               </span>
             </div>
             {calculatorQuantity >= 5 && (
               <div style={{
                 marginTop: '1rem',
-                padding: '0.75rem',
-                backgroundColor: '#fef3c7',
+                padding: '0.75rem 1rem',
+                backgroundColor: 'rgba(201,168,76,0.07)',
                 borderRadius: '0.5rem',
-                color: '#92400e',
-                fontSize: '0.875rem'
+                border: '1px solid rgba(201,168,76,0.2)',
+                color: GOLD,
+                fontSize: '0.875rem',
               }}>
-                💡 <strong>Bulk Discount:</strong> Consider package deals for 10+ lessons!
+                Tip: Ask about package deals for 10+ lessons and save more.
               </div>
             )}
           </div>
-        )}
-
-        {!selectedLessonForCalc && (
+        ) : (
           <div style={{
-            backgroundColor: 'white',
+            backgroundColor: '#0d0d0d',
             padding: '1.5rem',
             borderRadius: '0.75rem',
-            border: '2px dashed #10b981',
+            border: '1px dashed rgba(255,255,255,0.08)',
             textAlign: 'center',
-            color: '#6b7280'
+            color: '#555',
           }}>
-            👆 Select a lesson type above to calculate your total
+            Select a lesson type above to calculate your total
           </div>
         )}
       </div>
 
+      {/* Pricing Cards */}
       <div className="grid grid-3">
         {Object.entries(lessonsByLevel).map(([level, levelLessons]) => {
           if (levelLessons.length === 0) return null;
 
           const avgPrice = Math.round(levelLessons.reduce((sum, l) => sum + l.price, 0) / levelLessons.length);
-          const colors = levelColors[level];
 
           return (
             <div
               key={level}
               className="card"
               style={{
-                borderTop: `4px solid ${colors.border}`,
+                borderTop: `3px solid ${GOLD}`,
                 position: 'relative',
-                overflow: 'visible'
+                overflow: 'visible',
+                padding: '1.75rem',
               }}
             >
               {level === 'Intermediate' && (
@@ -268,71 +234,74 @@ const RatesPage = () => {
                   position: 'absolute',
                   top: '-12px',
                   right: '20px',
-                  backgroundColor: '#f59e0b',
-                  color: 'white',
+                  backgroundColor: GOLD,
+                  color: '#000',
                   padding: '0.25rem 0.75rem',
                   borderRadius: '9999px',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.25rem'
+                  gap: '0.25rem',
                 }}>
-                  <Star size={12} fill="white" />
-                  POPULAR
+                  <Star size={11} fill="#000" />
+                  Popular
                 </div>
               )}
 
-              <h3 style={{ fontSize: '1.75rem', fontWeight: 'bold', marginBottom: '0.5rem', color: colors.text }}>
+              <span style={{
+                backgroundColor: 'rgba(201,168,76,0.1)',
+                color: GOLD,
+                border: '1px solid rgba(201,168,76,0.2)',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '9999px',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                display: 'inline-block',
+                marginBottom: '1rem',
+              }}>
                 {level}
-              </h3>
+              </span>
 
               <div style={{ marginBottom: '1.5rem' }}>
-                <span style={{ fontSize: '3rem', fontWeight: 'bold', color: '#10b981' }}>
+                <span style={{ fontSize: '2.75rem', fontWeight: 700, color: '#f0f0f0', fontFamily: "'Playfair Display', serif" }}>
                   ${avgPrice}
                 </span>
-                <span style={{ color: '#6b7280', fontSize: '1rem' }}> / session</span>
+                <span style={{ color: '#555', fontSize: '0.9rem' }}> / session avg</span>
               </div>
 
-              <div style={{
-                backgroundColor: colors.bg,
-                padding: '0.75rem',
-                borderRadius: '0.5rem',
-                marginBottom: '1.5rem'
-              }}>
-                <p style={{ fontSize: '0.875rem', color: colors.text, fontWeight: 500, margin: 0 }}>
-                  {levelLessons.length} package{levelLessons.length > 1 ? 's' : ''} available
-                </p>
+              <div style={{ marginBottom: '0.5rem', color: '#555', fontSize: '0.8125rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {levelLessons.length} package{levelLessons.length > 1 ? 's' : ''} available
               </div>
+
+              <div style={{ height: '1px', backgroundColor: 'rgba(255,255,255,0.06)', margin: '1.25rem 0' }} />
 
               <ul style={{ listStyle: 'none', padding: 0, marginBottom: '1.5rem' }}>
                 {levelLessons.map((lesson) => (
-                  <li
-                    key={lesson._id}
-                    style={{
-                      display: 'flex',
-                      gap: '0.75rem',
-                      marginBottom: '1rem',
-                      paddingBottom: '1rem',
-                      borderBottom: '1px solid #f3f4f6'
-                    }}
-                  >
-                    <Check size={20} color="#10b981" style={{ flexShrink: 0, marginTop: '0.125rem' }} />
+                  <li key={lesson._id} style={{
+                    display: 'flex',
+                    gap: '0.75rem',
+                    marginBottom: '1rem',
+                    paddingBottom: '1rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  }}>
+                    <Check size={18} color={GOLD} style={{ flexShrink: 0, marginTop: '0.125rem', opacity: 0.8 }} />
                     <div style={{ flex: 1 }}>
-                      <strong style={{ color: '#111827', display: 'block', marginBottom: '0.25rem' }}>
+                      <strong style={{ color: '#e0e0e0', display: 'block', marginBottom: '0.25rem', fontSize: '0.9rem' }}>
                         {lesson.title}
                       </strong>
                       <div style={{
-                        fontSize: '0.875rem',
-                        color: '#6b7280',
+                        fontSize: '0.8125rem',
                         display: 'flex',
                         justifyContent: 'space-between',
-                        alignItems: 'center'
+                        alignItems: 'center',
                       }}>
-                        <span>{lesson.duration} minutes</span>
-                        <span style={{ fontWeight: 600, color: '#10b981' }}>
-                          ${lesson.price}
-                        </span>
+                        <span style={{ color: '#555' }}>{lesson.duration} min</span>
+                        <span style={{ fontWeight: 700, color: GOLD }}>${lesson.price}</span>
                       </div>
                     </div>
                   </li>
@@ -341,18 +310,8 @@ const RatesPage = () => {
 
               <button
                 type="button"
-                className="btn btn-primary"
-                style={{
-                  width: '100%',
-                  backgroundColor: colors.border,
-                  border: 'none',
-                  padding: '0.75rem 1.5rem',
-                  borderRadius: '0.5rem',
-                  fontSize: '1rem',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  color: 'white'
-                }}
+                className="btn btn-secondary"
+                style={{ width: '100%' }}
                 onClick={() => {
                   if (levelLessons.length > 0) {
                     setSelectedLessonForCalc(levelLessons[0]);
@@ -367,57 +326,45 @@ const RatesPage = () => {
         })}
       </div>
 
-      <div className="card" style={{
-        marginTop: '3rem',
-        backgroundColor: '#f0fdf4',
-        border: '2px solid #10b981'
-      }}>
+      {/* All Packages Include */}
+      <div className="card" style={{ marginTop: '3rem', boxShadow: '0 0 0 1px rgba(201,168,76,0.15), 0 4px 24px rgba(0,0,0,0.4)', padding: '2rem' }}>
         <h3 style={{
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          marginBottom: '1.5rem',
-          color: '#166534',
-          textAlign: 'center'
+          fontSize: '1.375rem',
+          fontWeight: 700,
+          marginBottom: '1.75rem',
+          color: '#f0f0f0',
+          fontFamily: "'Playfair Display', serif",
+          textAlign: 'center',
         }}>
           All Packages Include
         </h3>
-        <div className="grid grid-2">
-          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'start' }}>
-            <Check size={24} color="#10b981" style={{ flexShrink: 0 }} />
-            <div>
-              <strong style={{ color: '#166534', display: 'block' }}>Personalized Instruction</strong>
-              <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-                Tailored coaching based on your skill level
-              </span>
+        <div className="grid grid-2" style={{ gap: '1.5rem' }}>
+          {[
+            { title: 'Personalized Instruction', desc: 'Tailored coaching based on your skill level' },
+            { title: 'Flexible Scheduling', desc: 'Book lessons at times that work for you' },
+            { title: 'Video Analysis', desc: 'Review your technique with slow-motion replays' },
+            { title: 'Progress Tracking', desc: 'Monitor your improvement over time' },
+          ].map(({ title, desc }) => (
+            <div key={title} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(201,168,76,0.1)',
+                border: '1px solid rgba(201,168,76,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <Check size={16} color={GOLD} />
+              </div>
+              <div>
+                <strong style={{ color: '#e0e0e0', display: 'block', marginBottom: '0.25rem', fontSize: '0.9375rem' }}>{title}</strong>
+                <span style={{ color: '#666', fontSize: '0.875rem' }}>{desc}</span>
+              </div>
             </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'start' }}>
-            <Check size={24} color="#10b981" style={{ flexShrink: 0 }} />
-            <div>
-              <strong style={{ color: '#166534', display: 'block' }}>Flexible Scheduling</strong>
-              <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-                Book lessons at times that work for you
-              </span>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'start' }}>
-            <Check size={24} color="#10b981" style={{ flexShrink: 0 }} />
-            <div>
-              <strong style={{ color: '#166634', display: 'block' }}>Video Analysis</strong>
-              <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-                Review your technique with slow-motion replays
-              </span>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'start' }}>
-            <Check size={24} color="#10b981" style={{ flexShrink: 0 }} />
-            <div>
-              <strong style={{ color: '#166534', display: 'block' }}>Progress Tracking</strong>
-              <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-                Monitor your improvement over time
-              </span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
