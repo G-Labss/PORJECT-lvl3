@@ -54,7 +54,7 @@ const Testimonials = () => {
                     </div>
 
                     <p style={{ color: '#888', lineHeight: 1.75, marginBottom: '1.5rem', fontSize: '0.9375rem', fontStyle: 'italic' }}>
-                        "{testimonial.text + 'TEST'}"
+                        "{testimonial.text}"
                     </p>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', borderTop: '1px solid #1a1a1a', paddingTop: '1.25rem' }}>

@@ -8,7 +8,7 @@ const AboutPage = () => {
     const { currentUser } = state;
 
     const achievements = [
-        { icon: Trophy, title: 'ITF lvl 1 certified', description: 'Professional Tennis Registry Certification' },
+        { icon: Trophy, title: 'ITF lvl 3 certified', description: 'Professional Tennis Registry Certification' },
         { icon: Award, title: 'NTRP 6.5 Rated and 7.0 in the past', description: 'Elite competitive player background' },
         { icon: Target, title: '100+ Students Coached', description: 'Helping players of all levels since 2015' },
         { icon: TrendingUp, title: '95% Success Rate', description: 'Students reach their goals within 3–6 months' },
