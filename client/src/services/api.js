@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_EP = "http://ec2-13-59-18-58.us-east-2.compute.amazonaws.com:3001"
+// const BASE_EP = "http://ec2-13-59-18-58.us-east-2.compute.amazonaws.com:3001"
+const BASE_EP = 'https://api.chicagoprivatetennis.com';
 
 const api = axios.create({
   baseURL: BASE_EP + '/api',
