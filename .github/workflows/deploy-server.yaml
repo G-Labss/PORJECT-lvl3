@@ -1,0 +1,30 @@
+name: Deploy Node.js App to EC2
+
+on:
+  push:
+    branches:
+      - server
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./server
+
+    steps:
+      - name: Executing SSH Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd PROJECT-lvl3-/server
+            echo "--===logging on into github repo===--"
+            git remote set-url origin https://${{ secrets.USERNAME }}:${{ secrets.TOKEN }}@github.com/${{ github.repository }}
+            sudo bash deploy.sh
+            
+      
+      
