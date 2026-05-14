@@ -24,6 +24,9 @@ jobs:
             cd PROJECT-lvl3-/server
             echo "--===logging on into github repo===--"
             git remote set-url origin https://${{ secrets.USERNAME }}:${{ secrets.TOKEN }}@github.com/${{ github.repository }}
+            git checkout server
+            git pull origin server
+            echo "--===deploying server===--"
             sudo bash deploy.sh
             
       
