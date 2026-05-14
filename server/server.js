@@ -47,6 +47,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.get("/ping", (req, res) => res.json({ message: 'pong' }));
+
 app.get("/seed", async (req, res) => {
   try {
     const seedData = require("./seedData.js");
